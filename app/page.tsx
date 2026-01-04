@@ -212,7 +212,7 @@ export default function GameAccountMarketplace() {
         <div className="max-w-6xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-black tracking-tight">
-              GameAccounts
+              GammaC
             </h1>
             <div className="flex items-center gap-2">
               <button
