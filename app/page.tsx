@@ -263,7 +263,7 @@ export default function GameAccountMarketplace() {
         </div>
 
         {/* Game Filter */}
-        <div className="flex justify-center gap-4 mb-16">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
           {games.map((game, index) => (
             <button
               key={index}
