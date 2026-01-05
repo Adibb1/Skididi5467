@@ -190,7 +190,7 @@ export default function GameAccountMarketplace() {
     },
   ];
 
-  const minPrice = Math.min(...accounts.map((a) => a.price[currency]));
+  const minPrice = 0;
   const maxPrice = Math.max(...accounts.map((a) => a.price[currency]));
 
   const filteredAccounts = accounts
