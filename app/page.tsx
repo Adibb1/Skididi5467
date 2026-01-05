@@ -324,23 +324,25 @@ export default function GameAccountMarketplace() {
         </div>
 
         {/* Accounts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
           {filteredAccounts.map((account) => (
             <div
               key={account.id}
-              className="group cursor-pointer"
+              className="group cursor-pointer w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.333rem)] max-w-sm"
               onClick={() => handleInterest(account)}
             >
-              <div className="bg-gray-100 aspect-square w-full max-w-xs mb-4 flex items-center justify-center overflow-hidden">
-                <span className="text-5xl font-light text-gray-300 group-hover:scale-105 transition-transform duration-300">
+              <div className="bg-gray-100 aspect-square mb-3 sm:mb-4 flex items-center justify-center overflow-hidden">
+                <span className="text-3xl sm:text-5xl font-light text-gray-300 group-hover:scale-105 transition-transform duration-300">
                   {account.image}
                 </span>
               </div>
-              <div className="text-sm text-gray-500 mb-1">{account.game}</div>
-              <h3 className="text-lg font-medium text-black mb-2">
+              <div className="text-xs sm:text-sm text-gray-500 mb-1">
+                {account.game}
+              </div>
+              <h3 className="text-base sm:text-lg font-medium text-black mb-1 sm:mb-2">
                 {account.title}
               </h3>
-              <div className="text-lg font-semibold text-black">
+              <div className="text-sm sm:text-lg font-semibold text-black">
                 {currency === "myr"
                   ? `RM ${account.price.myr}`
                   : `Rp ${account.price.idr.toLocaleString("id-ID")}`}
