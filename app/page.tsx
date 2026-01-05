@@ -17,6 +17,7 @@ interface GameAccount {
 }
 
 export default function GameAccountMarketplace() {
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGame, setSelectedGame] = useState<string>("all");
   const [showModal, setShowModal] = useState(false);
@@ -189,16 +190,17 @@ export default function GameAccountMarketplace() {
     },
   ];
 
+  const minPrice = Math.min(...accounts.map((a) => a.price[currency]));
+  const maxPrice = Math.max(...accounts.map((a) => a.price[currency]));
+
   const filteredAccounts = accounts
     .filter(
       (acc) => selectedGame === "all" || acc.game.toLowerCase() === selectedGame
     )
-    .filter(
-      (acc) =>
-        searchQuery === "" ||
-        acc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        acc.game.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    .filter((acc) => {
+      const price = acc.price[currency];
+      return price >= priceRange.min && price <= priceRange.max;
+    });
 
   const handleInterest = (account: GameAccount) => {
     setSelectedAccount(account);
@@ -211,7 +213,7 @@ export default function GameAccountMarketplace() {
       <header className="border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-black tracking-tight">
+            <h1 className="text-lg font-semibold text-black tracking-tight">
               GammaC
             </h1>
             <div className="flex items-center gap-2">
@@ -241,25 +243,64 @@ export default function GameAccountMarketplace() {
         </div>
       </header>
 
-      {/* Search Bar */}
-      <div className="max-w-xl mx-auto mt-10">
-        <input
-          type="text"
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search accounts..."
-          className="w-full px-6 py-4 border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors"
-        />
-      </div>
-
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-6 py-16">
+        {/* Search Bar */}
+        <div className="max-w-xl mx-auto mb-10">
+          <input
+            type="text"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search accounts..."
+            className="w-full px-6 py-3 border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors"
+          />
+        </div>
+
+        {/* title */}
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-semibold text-black mb-4 tracking-tight">
+          <h2 className="text-4xl font-semibold text-black mb-4 tracking-tight">
             Premium Game Accounts
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-lg text-gray-600">
             Verified accounts with instant delivery
           </p>
+        </div>
+
+        {/* Price Range Slider */}
+        <div className="max-w-xl mx-auto mb-16">
+          <div className="mb-4">
+            <div className="flex justify-between text-sm text-gray-500 mb-2">
+              <span>Price Range</span>
+              <span>
+                {currency === "myr"
+                  ? `RM ${priceRange.min} - RM ${priceRange.max}`
+                  : `Rp ${priceRange.min.toLocaleString(
+                      "id-ID"
+                    )} - Rp ${priceRange.max.toLocaleString("id-ID")}`}
+              </span>
+            </div>
+            <div className="flex gap-4 items-center">
+              <input
+                type="range"
+                min={minPrice}
+                max={maxPrice}
+                value={priceRange.min}
+                onChange={(e) =>
+                  setPriceRange({ ...priceRange, min: Number(e.target.value) })
+                }
+                className="flex-1 h-0.5 bg-gray-300 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:cursor-pointer"
+              />
+              <input
+                type="range"
+                min={minPrice}
+                max={maxPrice}
+                value={priceRange.max}
+                onChange={(e) =>
+                  setPriceRange({ ...priceRange, max: Number(e.target.value) })
+                }
+                className="flex-1 h-0.5 bg-gray-300 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:cursor-pointer"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Game Filter */}
@@ -290,8 +331,8 @@ export default function GameAccountMarketplace() {
               className="group cursor-pointer"
               onClick={() => handleInterest(account)}
             >
-              <div className="bg-gray-100 aspect-square mb-4 flex items-center justify-center overflow-hidden">
-                <span className="text-9xl font-light text-gray-300 group-hover:scale-105 transition-transform duration-300">
+              <div className="bg-gray-100 aspect-square w-full max-w-xs mb-4 flex items-center justify-center overflow-hidden">
+                <span className="text-5xl font-light text-gray-300 group-hover:scale-105 transition-transform duration-300">
                   {account.image}
                 </span>
               </div>
@@ -299,7 +340,7 @@ export default function GameAccountMarketplace() {
               <h3 className="text-lg font-medium text-black mb-2">
                 {account.title}
               </h3>
-              <div className="text-xl font-semibold text-black">
+              <div className="text-lg font-semibold text-black">
                 {currency === "myr"
                   ? `RM ${account.price.myr}`
                   : `Rp ${account.price.idr.toLocaleString("id-ID")}`}
