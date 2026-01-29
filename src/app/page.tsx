@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getCurrentUser } from "../utils/auth";
+import { getCookie } from "../utils/cookie";
 
 interface GameAccount {
   id: number;
@@ -25,6 +27,18 @@ export default function GameAccountMarketplace() {
     null
   );
   const [currency, setCurrency] = useState<"myr" | "idr">("myr");
+
+
+  const onLoad = async () => {
+        const token = localStorage.getItem('token')
+        if (token) {
+            const user = await getCurrentUser(token)
+        }
+    }
+
+    useEffect(() => {
+        onLoad()
+    }, [])
 
   const games = [
     "All Games",
@@ -209,39 +223,6 @@ export default function GameAccountMarketplace() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-black tracking-tight">
-              GammaC
-            </h1>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrency("myr")}
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  currency === "myr"
-                    ? "text-black"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
-              >
-                MYR
-              </button>
-              <span className="text-gray-300">|</span>
-              <button
-                onClick={() => setCurrency("idr")}
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  currency === "idr"
-                    ? "text-black"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
-              >
-                IDR
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-6 py-16">
@@ -274,8 +255,8 @@ export default function GameAccountMarketplace() {
                 {currency === "myr"
                   ? `RM ${priceRange.min} - RM ${priceRange.max}`
                   : `Rp ${priceRange.min.toLocaleString(
-                      "id-ID"
-                    )} - Rp ${priceRange.max.toLocaleString("id-ID")}`}
+                    "id-ID"
+                  )} - Rp ${priceRange.max.toLocaleString("id-ID")}`}
               </span>
             </div>
             <div className="flex gap-4 items-center">
@@ -311,12 +292,11 @@ export default function GameAccountMarketplace() {
               onClick={() =>
                 setSelectedGame(index === 0 ? "all" : game.toLowerCase())
               }
-              className={`px-5 py-2 text-sm font-medium transition-colors ${
-                (index === 0 && selectedGame === "all") ||
+              className={`px-5 py-2 text-sm font-medium transition-colors ${(index === 0 && selectedGame === "all") ||
                 game.toLowerCase() === selectedGame
-                  ? "text-black border-b-2 border-black"
-                  : "text-gray-400 hover:text-gray-600"
-              }`}
+                ? "text-black border-b-2 border-black"
+                : "text-gray-400 hover:text-gray-600"
+                }`}
             >
               {game}
             </button>
@@ -383,8 +363,8 @@ export default function GameAccountMarketplace() {
                     {currency === "myr"
                       ? `RM ${selectedAccount.price.myr}`
                       : `Rp ${selectedAccount.price.idr.toLocaleString(
-                          "id-ID"
-                        )}`}
+                        "id-ID"
+                      )}`}
                   </div>
                 </div>
 

@@ -1,20 +1,51 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/src/components/button"
+"use client"
+
+import { Button } from "@/src/components/ui/button"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/src/components/card"
+} from "@/src/components/ui/card"
 import {
     Field,
     FieldDescription,
     FieldGroup,
     FieldLabel,
-} from "@/src/components/field"
-import { Input } from "@/src/components/input"
+} from "@/src/components/ui/field"
+import { Input } from "@/src/components/ui/input"
+import { logIn } from "@/src/utils/auth"
+import { setCookie } from "@/src/utils/cookie"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { toast } from "react-toastify"
+
 export default function Page() {
+    const router = useRouter()
+    const [formData, setFormData] = useState({ email: 'j', password: '123123123', username: '' });
+
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        toast("Logging in...")
+
+        const res = await logIn(formData);
+        if (res.status < 400) {
+            await setCookie("token", res.token!)
+            toast.success(res.msg)
+            window.location.reload()
+        } else {
+            toast.error(res.error.message);
+            return
+        }
+    };
     return (
         <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
             <div className="w-full max-w-sm">
@@ -30,12 +61,14 @@ export default function Page() {
                             <form>
                                 <FieldGroup>
                                     <Field>
-                                        <FieldLabel htmlFor="email">Email</FieldLabel>
+                                        <FieldLabel htmlFor="email">Email / Username</FieldLabel>
                                         <Input
                                             id="email"
                                             type="email"
-                                            placeholder="m@example.com"
+                                            name="email"
+                                            placeholder="johndoe@example.com / johndoe"
                                             required
+                                            onChange={handleChange}
                                         />
                                     </Field>
                                     <Field>
@@ -48,15 +81,15 @@ export default function Page() {
                                                 Forgot your password?
                                             </a>
                                         </div>
-                                        <Input id="password" type="password" required />
+                                        <Input id="password" type="password" name="password" required onChange={handleChange} />
                                     </Field>
                                     <Field>
-                                        <Button type="submit">Login</Button>
+                                        <Button type="submit" onClick={handleSubmit}>Login</Button>
                                         {/* <Button variant="outline" type="button">
                                             Login with Google
                                         </Button> */}
                                         <FieldDescription className="text-center">
-                                            Don&apos;t have an account? <a href="#">Sign up</a>
+                                            Don&apos;t have an account? <a href="/signup">Sign up</a>
                                         </FieldDescription>
                                     </Field>
                                 </FieldGroup>

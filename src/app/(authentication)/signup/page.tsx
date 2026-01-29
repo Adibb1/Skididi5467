@@ -1,20 +1,45 @@
-import { Button } from "@/src/components/button"
+"use client"
+
+import { Button } from "@/src/components/ui/button"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/src/components/card"
+} from "@/src/components/ui/card"
 import {
     Field,
     FieldDescription,
     FieldGroup,
     FieldLabel,
-} from "@/src/components/field"
-import { Input } from "@/src/components/input"
+} from "@/src/components/ui/field"
+import { Input } from "@/src/components/ui/input"
+import { signUp } from "@/src/utils/auth"
+import { useState } from "react"
+import { toast } from "react-toastify"
 
 export default function Page() {
+    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        toast("Signing up...")
+
+        const res = await signUp(formData);
+        if (res.status < 400) {
+            toast.success(res.msg)
+        } else {
+            toast.error(res.error.message);
+        }
+    };
     return (
         <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
             <div className="w-full max-w-sm">
@@ -29,8 +54,8 @@ export default function Page() {
                         <form>
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                                    <Input id="name" type="text" placeholder="John Doe" required />
+                                    <FieldLabel htmlFor="username">Username</FieldLabel>
+                                    <Input id="username" type="text" placeholder="johndoe123" name="username" onChange={handleChange} required />
                                 </Field>
                                 <Field>
                                     <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -38,6 +63,8 @@ export default function Page() {
                                         id="email"
                                         type="email"
                                         placeholder="m@example.com"
+                                        name="email"
+                                        onChange={handleChange}
                                         required
                                     />
                                     <FieldDescription>
@@ -47,7 +74,7 @@ export default function Page() {
                                 </Field>
                                 <Field>
                                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                                    <Input id="password" type="password" required />
+                                    <Input id="password" type="password" name="password" onChange={handleChange} required />
                                     <FieldDescription>
                                         Must be at least 8 characters long.
                                     </FieldDescription>
@@ -61,12 +88,12 @@ export default function Page() {
                                 </Field>
                                 <FieldGroup>
                                     <Field>
-                                        <Button type="submit">Create Account</Button>
+                                        <Button type="submit" onClick={handleSubmit}>Create Account</Button>
                                         {/* <Button variant="outline" type="button">
                                             Sign up with Google
                                         </Button> */}
                                         <FieldDescription className="px-6 text-center">
-                                            Already have an account? <a href="#">Sign in</a>
+                                            Already have an account? <a href="/login">Log in</a>
                                         </FieldDescription>
                                     </Field>
                                 </FieldGroup>
