@@ -21,10 +21,11 @@ app.use(express.json());
 
 //parse server
 const parseServer = new ParseServer({
-  databaseURI: process.env.DATABASE_URI,
+  // databaseURI: process.env.DATABASE_URI,
   appId: process.env.NEXT_PUBLIC_PARSE_APP_ID,
   masterKey: process.env.NEXT_PUBLIC_PARSE_MASTER_KEY,
-  serverURL: `http://localhost:${process.env.PORT}/parse`,
+  // serverURL: `http://localhost:${process.env.PORT}/parse`,
+  serverURL: process.env.NEXT_PUBLIC_PARSE_SERVER_URL,
 
   databaseOptions: {
     maxPoolSize: 10,
@@ -41,7 +42,6 @@ app.get('/', (req, res) => {
   res.status(200).send('Parse Server is running with Express and TypeScript.');
 });
 
-const port = process.env.PORT || 1337;
-app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}/parse`);
+app.listen(() => {
+  console.log(`🚀 Server running on ${process.env.NEXT_PUBLIC_PARSE_SERVER_URL}`);
 });

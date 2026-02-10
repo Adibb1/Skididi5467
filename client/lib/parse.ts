@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
 import Parse from "parse";
 
-if (!Parse.applicationId) {
-  Parse.initialize(
-    process.env.NEXT_PUBLIC_PARSE_APP_ID!,
-    process.env.NEXT_PUBLIC_PARSE_JAVASCRIPT_KEY!,
-    // process.env.NEXT_PUBLIC_PARSE_MASTER_KEY!
-  );
+// if (!Parse.applicationId) {
+Parse.initialize(
+  process.env.NEXT_PUBLIC_PARSE_APP_ID!,
+  process.env.NEXT_PUBLIC_PARSE_JS_KEY!
+  // process.env.NEXT_PUBLIC_PARSE_MASTER_KEY!
+);
 
-  Parse.serverURL = process.env.NEXT_PUBLIC_PARSE_SERVER_URL!;
-}
+Parse.serverURL = process.env.NEXT_PUBLIC_PARSE_SERVER_URL!;
+// }
 
 export default Parse;
 

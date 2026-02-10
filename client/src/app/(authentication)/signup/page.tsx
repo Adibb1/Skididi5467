@@ -93,7 +93,7 @@ export default function Page() {
                                             Sign up with Google
                                         </Button> */}
                                         <FieldDescription className="px-6 text-center">
-                                            Already have an account? <a href="/login">Log in</a>
+                                            Already have an account? <a href="/signin">Log in</a>
                                         </FieldDescription>
                                     </Field>
                                 </FieldGroup>
