@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { getCurrentUser } from "../utils/auth";
-import { getCookie } from "../utils/cookie";
 
 interface GameAccount {
   id: number;
@@ -30,15 +29,15 @@ export default function GameAccountMarketplace() {
 
 
   const onLoad = async () => {
-        const token = localStorage.getItem('token')
-        if (token) {
-            const user = await getCurrentUser(token)
-        }
-    }
+    // const token = localStorage.getItem('token')
+    // if (token) {
+    //   const user = await getCurrentUser()
+    // }
+  }
 
-    useEffect(() => {
-        onLoad()
-    }, [])
+  useEffect(() => {
+    onLoad()
+  }, [])
 
   const games = [
     "All Games",

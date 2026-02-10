@@ -16,10 +16,11 @@ import {
 } from "@/src/components/ui/field"
 import { Input } from "@/src/components/ui/input"
 import { logIn } from "@/src/utils/auth"
-import { setCookie } from "@/src/utils/cookie"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "react-toastify"
+import Parse from "@/lib/parse"
+import { setCookie } from "@/src/utils/cookie"
 
 export default function Page() {
     const router = useRouter()
@@ -35,7 +36,6 @@ export default function Page() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         toast("Logging in...")
-
         const res = await logIn(formData);
         if (res.status < 400) {
             await setCookie("token", res.token!)

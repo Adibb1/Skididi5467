@@ -1,8 +1,7 @@
-"use server";
+"use client";
 
 import Parse from "@/lib/parse";
-import { UserLogin } from "../interfaces/user";
-import { Session } from "parse";
+import { UserLogin } from "../interfaces/auth";
 
 export const signUp = async (formData: UserLogin) => {
   const { username, password, email } = formData;
@@ -38,17 +37,33 @@ export const logIn = async (formData: UserLogin) => {
   }
 };
 
-export const getCurrentUser = async (token: string) => {
-  const query = new Parse.Query("_Session");
-  query.equalTo("sessionToken", token);
-  const session = await query.first({ useMasterKey: true });
+export const logOut = async () => {
+  try {
+    await Parse.User.logOut();
+    return {
+      msg: "User logged out successfully.",
+      status: 200,
+    };
+  } catch (error: any) {
+    return { error, status: 400 };
+  }
+};
 
-  const user = session?.get("user");
-  await user.fetch({ useMasterKey: true })
-  return {
-    id: user.id,
-    username: user.get('username'),
-    email: user.get('email'),
-    createdAt: user._created_at,
-  };;
+export const getCurrentUser = async () => {
+  const user = Parse.User.current();
+  // const query = new Parse.Query("_Session");
+  // query.equalTo("sessionToken", token);
+  // const session = await query.first({ useMasterKey: true });
+
+  // const user = session?.get("user");
+  // await user.fetch({ useMasterKey: true })
+  if (user) {
+    return {
+      id: user.id,
+      username: user.get("username"),
+      email: user.get("email"),
+      createdAt: user.createdAt,
+    };
+  }
+  return null;
 };

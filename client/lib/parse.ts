@@ -1,7 +1,16 @@
-import Parse from "parse/node";
+'use client'
 
-Parse.initialize(process.env.APP_ID!, undefined, process.env.MASTER_KEY);
-Parse.serverURL = "http://localhost:1337/parse";
+import Parse from "parse";
+
+if (!Parse.applicationId) {
+  Parse.initialize(
+    process.env.NEXT_PUBLIC_PARSE_APP_ID!,
+    process.env.NEXT_PUBLIC_PARSE_JAVASCRIPT_KEY!,
+    // process.env.NEXT_PUBLIC_PARSE_MASTER_KEY!
+  );
+
+  Parse.serverURL = process.env.NEXT_PUBLIC_PARSE_SERVER_URL!;
+}
 
 export default Parse;
 

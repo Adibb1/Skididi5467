@@ -3,15 +3,14 @@
 import Link from "next/link"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { Button } from "./ui/button"
-import { Label } from "./ui/label"
-import { Input } from "./ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "./ui/dropdownMenu"
-import { getCurrentUser } from "../utils/auth"
+import { getCurrentUser, logOut } from "../utils/auth"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
 import { deleteCookie, getCookie } from "../utils/cookie"
+import AddAccount from "./addAccount"
 
 export function Navbar() {
     const router = useRouter()
@@ -19,9 +18,9 @@ export function Navbar() {
 
     const onLoad = async () => {
         setEmail("")
-        const token = await getCookie('token')
-        if (token) {
-            const user = await getCurrentUser(token)
+        const user = await getCurrentUser()
+        console.log(user)
+        if (user) {
             setEmail(user.email)
         }
     }
@@ -31,8 +30,14 @@ export function Navbar() {
     }, [])
 
     const logoutHandler = async () => {
-        await deleteCookie('token')
-        toast.success("Logged out successfully.")
+        const res = await logOut()
+        if (res.status < 400) {
+            await deleteCookie("token")
+            toast.success(res.msg)
+        } else {
+            toast.error(res.error.message);
+            return
+        }
         onLoad()
     }
 
@@ -47,16 +52,19 @@ export function Navbar() {
                     </Link>
                     <div className="flex items-center gap-4">
 
-                        {!email ? <><Link href={'/signup'}>
-                            <p className="text-sm text-gray-600 font-medium hover:opacity-70">
-                                Sign Up
-                            </p>
-                        </Link>
+                        {!email ? <>
+                            <Link href={'/signup'}>
+                                <p className="text-sm text-gray-600 font-medium hover:opacity-70">
+                                    Sign Up
+                                </p>
+                            </Link>
                             <Link href={'/signin'}>
                                 <button className="cursor-pointer flex-1 bg-black text-white p-4 py-2 text-sm font-medium hover:bg-gray-800 transition-colors">
                                     Log In
                                 </button>
-                            </Link></> :
+                            </Link>
+                        </> : <>
+                            <AddAccount />
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
                                     <Avatar>
@@ -72,15 +80,18 @@ export function Navbar() {
                                         <DropdownMenuLabel>{email}</DropdownMenuLabel>
                                         <DropdownMenuItem>
                                             Profile
-                                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                                         </DropdownMenuItem>
+                                        <Link href={'/mygameaccounts'}>
+                                            <DropdownMenuItem>
+                                                My Game Accounts
+                                            </DropdownMenuItem>
+                                        </Link>
                                         <DropdownMenuItem>
                                             Billing
-                                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                            {/* <DropdownMenuShortcut>⌘B</DropdownMenuShortcut> */}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem>
                                             Settings
-                                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
                                     <DropdownMenuSeparator />
@@ -109,7 +120,9 @@ export function Navbar() {
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
                                 </DropdownMenuContent>
-                            </DropdownMenu>}
+                            </DropdownMenu>
+                        </>
+                        }
                         {/* <button
                 onClick={() => setCurrency("myr")}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${currency === "myr"

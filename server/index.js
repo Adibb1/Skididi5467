@@ -7,11 +7,12 @@
 // import cors from 'cors';
 
 const dotenv = require('dotenv')
-dotenv.config({path: "../.env"});
+dotenv.config({path: "../client/.env"});
 
 const express = require('express');
 const { ParseServer } = require('parse-server');
-const cors = require('cors')
+const cors = require('cors');
+const { initializeClasses } = require('./parse');
 const app = express();
 
 //middleware
@@ -21,8 +22,8 @@ app.use(express.json());
 //parse server
 const parseServer = new ParseServer({
   databaseURI: process.env.DATABASE_URI,
-  appId: process.env.APP_ID,
-  masterKey: process.env.MASTER_KEY,
+  appId: process.env.NEXT_PUBLIC_PARSE_APP_ID,
+  masterKey: process.env.NEXT_PUBLIC_PARSE_MASTER_KEY,
   serverURL: `http://localhost:${process.env.PORT}/parse`,
 
   databaseOptions: {
@@ -31,6 +32,8 @@ const parseServer = new ParseServer({
   }
 });
 parseServer.start();
+
+initializeClasses()
 
 app.use('/parse', parseServer.app);
 
