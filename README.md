@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+Before you begin, ensure you have the following installed:
 
+* [Node.js](https://nodejs.org) (v14 or later)
+* [Parse Server](https://firebase.google.com/docs/cli) (for production debugging)
+* [Git](https://git-scm.com/) (for version control)
+* [npm or yarn](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+### Installation
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/Adibb1/Skididi5467.git
+   cd Skididi5467
+   ```
+2. Install dependencies:
+
+   ```bash
+   cd client
+   npm install
+   # or
+   yarn install
+
+   cd ../server
+   npm install
+   ```
+3. Install MongoDB and add credentials to a .env file at the root of the client folder:
+
+   ```bash
+   PORT=1337
+   DATABASE_URI=your-database-uri (example: mongodb://localhost:27017/gammac)
+   NEXT_PUBLIC_PARSE_APP_ID=your-app-id
+   NEXT_PUBLIC_PARSE_JS_KEY=your-js-key
+   NEXT_PUBLIC_PARSE_MASTER_KEY=your-master-key
+   NEXT_PUBLIC_PARSE_SERVER_URL=your-server-url (example: http://localhost:1337/parse)
+   ```
+
+### Running the App
+Start the development client and server:
 ```bash
+cd client
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+cd ../server
+nodemon index
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
