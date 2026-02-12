@@ -18,15 +18,11 @@ Before you begin, ensure you have the following installed:
 2. Install dependencies:
 
    ```bash
-   cd client
    npm install
    # or
    yarn install
-
-   cd ../server
-   npm install
    ```
-3. Install MongoDB and add credentials to a .env file at the root of the client folder:
+3. Install MongoDB or use Back4App/MongoDB Atlas or other BaaS providers and add credentials to a .env file at the root of the client folder:
 
    ```bash
    PORT=1337
@@ -38,13 +34,9 @@ Before you begin, ensure you have the following installed:
    ```
 
 ### Running the App
-Start the development client and server:
+Start the development server:
 ```bash
-cd client
 npm run dev
 # or
 yarn dev
-
-cd ../server
-nodemon index
 ```
