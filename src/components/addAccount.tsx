@@ -4,33 +4,26 @@ import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from "./ui/select"
 import { Textarea } from "./ui/textarea"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { addGameAccount } from "../utils/gameAccount"
 import { GameAccountInfo } from "../interfaces/gameAccount"
-
-const games = [
-    {
-        name: "Mobile Legends",
-        value: "mobile_legends"
-    },
-    {
-        name: "FIFA",
-        value: "fifa"
-    },
-    {
-        name: "idk vro",
-        value: "idkvro"
-    },
-    {
-        name: "Skididi",
-        value: "skididi"
-    },
-]
+import { Game } from "../interfaces/games"
+import { allGames } from "../utils/games"
 
 export default function AddAccount() {
     const [formData, setFormData] = useState({} as GameAccountInfo);
     const [dialogOpen, setDialogOpen] = useState(false)
+    const [games, setGames] = useState([] as Game[])
+
+    useEffect(() => {
+        onLoad()
+    }, [])
+
+    const onLoad = async () => {
+        const tempGames = await allGames() as Game[];
+        setGames(tempGames)
+    }
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         setFormData({
@@ -81,7 +74,7 @@ export default function AddAccount() {
                                     <SelectGroup>
                                         <SelectLabel>Games</SelectLabel>
                                         {games.map((game, index) => (
-                                            <SelectItem value={game.value} key={`game${index}`}>{game.name}</SelectItem>
+                                            <SelectItem value={game.value} key={`game${index}`}>{game.title}</SelectItem>
                                         ))}
                                     </SelectGroup>
                                 </SelectContent>

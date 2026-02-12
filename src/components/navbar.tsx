@@ -11,6 +11,7 @@ import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
 import { deleteCookie, getCookie } from "../utils/cookie"
 import AddAccount from "./addAccount"
+import AddGame from "./addGame"
 
 export function Navbar() {
     const router = useRouter()
@@ -64,6 +65,7 @@ export function Navbar() {
                                 </button>
                             </Link>
                         </> : <>
+                            <AddGame />
                             <AddAccount />
                             <DropdownMenu>
                                 <DropdownMenuTrigger>

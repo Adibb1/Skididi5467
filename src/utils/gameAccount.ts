@@ -11,8 +11,12 @@ export const addGameAccount = async (formData: GameAccountInfo) => {
   //   gameAccount.set(key, formData[key]);
   // }
 
+  const query = new Parse.Query("Games")
+  query.equalTo("value", formData.game)
+  const game = await query.first()
+
   try {
-    await gameAccount.save({...formData, user: Parse.User.current()});
+    await gameAccount.save({...formData, user: Parse.User.current(), game: game});
     return { msg: "Game account added successfully.", status: 200 };
   } catch (error: any) {
     return { error, status: 400 };
